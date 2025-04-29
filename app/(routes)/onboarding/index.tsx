@@ -1,18 +1,10 @@
 import { View, Text } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import OnboardingScreen from '@/screens/onboarding/onboarding.screen'
 
-const index = () => {
-    const [loggedInUser, setloggedInUser] = useState(true);
-    const [loading,setLoading] = useState(true);
-
-    useEffect(()=>{
-
-    },[])
+export default function index() {
   return (
-    <View>
-      <Text>index</Text>
-    </View>
+    
+   <OnboardingScreen />
   )
 }
-
-export default index
