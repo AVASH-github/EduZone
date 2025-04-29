@@ -59,7 +59,11 @@ export const onBoardingSlides: onBoardingSlidesTypes[] = [
   },
 ];
 
-
+export enum Side {
+    LEFT,
+    RIGHT,
+    NONE,
+}
 // onboarding variables
 
 export const MIN_LEDGE = 25;
