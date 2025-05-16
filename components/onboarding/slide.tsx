@@ -1,10 +1,16 @@
-import {View,Text,StyleSheet, TouchableOpacity, Pressable,
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Pressable,
   Platform,
-  Modal,} from 'react-native'
-import React,{useState} from 'react'
-import {Defs,RadialGradient, Rect, Stop, Svg} from 'react-native-svg'
-import { HEIGHT, WIDTH } from '@/configs/constants';
-import { scale, verticalScale, moderateScale, } from 'react-native-size-matters';
+  Modal,
+} from "react-native";
+import React, { useState } from "react";
+import { Defs, RadialGradient, Rect, Stop, Svg } from "react-native-svg";
+import { HEIGHT, WIDTH } from "@/configs/constants";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import {
   fontSizes,
   SCREEN_WIDTH,
@@ -13,19 +19,19 @@ import {
 } from "@/themes/app.constant";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-
+import AuthModal from "../auth/auth.modal";
 
 export default function Slide({
   slide,
   index,
   setIndex,
   totalSlides,
-}:{
-  slide:onBoardingSlidesTypes;
-  index:number;
-  setIndex: (value:number)=>void;
-  totalSlides:number;
-}){
+}: {
+  slide: onBoardingSlidesTypes;
+  index: number;
+  setIndex: (value: number) => void;
+  totalSlides: number;
+}) {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handlePress = (index: number, setIndex: (index: number) => void) => {
@@ -35,23 +41,23 @@ export default function Slide({
       setIndex(index + 1);
     }
   };
-  
+
   return (
     <>
       <Svg style={StyleSheet.absoluteFill}>
         <Defs>
-        <RadialGradient id="gradient" cx="50%" cy="35%">
+          <RadialGradient id="gradient" cx="50%" cy="35%">
             <Stop offset="0%" stopColor={slide.color} />
             <Stop offset="100%" stopColor={slide.color} />
           </RadialGradient>
         </Defs>
         <Rect
-        x={0}
-        y={0}
-        width={WIDTH}
-        height={HEIGHT}
-        fill={"url(#gradient)"}
-      />
+          x={0}
+          y={0}
+          width={WIDTH}
+          height={HEIGHT}
+          fill={"url(#gradient)"}
+        />
       </Svg>
       <View style={styles.container}>
         <View>{slide.image}</View>
@@ -62,7 +68,7 @@ export default function Slide({
               paddingHorizontal: verticalScale(25),
             }}
           >
-             <Text
+            <Text
               style={{
                 fontSize: fontSizes.FONT30,
                 fontWeight: "600",
@@ -92,8 +98,6 @@ export default function Slide({
             >
               {slide.subTitle}
             </Text>
-
-
           </View>
         </View>
       </View>
@@ -105,8 +109,8 @@ export default function Slide({
           />
         ))}
       </View>
-  {/* Next Button */}
-  {index <= totalSlides - 1 && (
+      {/* Next Button */}
+      {index <= totalSlides - 1 && (
         <LinearGradient
           colors={["#6D55FE", "#8976FC"]}
           style={styles.nextButton}
@@ -119,13 +123,13 @@ export default function Slide({
               width: "100%",
               height: "100%",
             }}
-             onPress={() => handlePress(index, setIndex)}
+            onPress={() => handlePress(index, setIndex)}
           >
             <Text style={styles.nextButtonText}>Next</Text>
           </Pressable>
         </LinearGradient>
       )}
-        {index < totalSlides - 1 && (
+      {index < totalSlides - 1 && (
         <TouchableOpacity
           style={styles.arrowButton}
           onPress={() => handlePress(index, setIndex)}
@@ -137,8 +141,20 @@ export default function Slide({
           />
         </TouchableOpacity>
       )}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <Pressable style={{ flex: 1 }} onPress={() => setModalVisible(false)}>
+          <AuthModal  />
+        </Pressable>
+      </Modal>
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
