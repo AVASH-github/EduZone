@@ -129,7 +129,7 @@ export default function Slide({
           </Pressable>
         </LinearGradient>
       )}
-      {/* {index < totalSlides - 1 && (
+      {index < totalSlides - 1 && (
         <TouchableOpacity
           style={styles.arrowButton}
           onPress={() => handlePress(index, setIndex)}
@@ -140,7 +140,7 @@ export default function Slide({
             color="black"
           />
         </TouchableOpacity>
-      )} */}
+      )}
       <Modal
         animationType="fade"
         transparent={true}
