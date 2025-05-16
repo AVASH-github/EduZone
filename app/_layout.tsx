@@ -8,8 +8,7 @@ const _layout = () => {
     <ThemeProvider>
       <Stack screenOptions={{headerShown: false}}>
         <Stack.Screen name='index' />
-        <Stack.Screen name="(routes)/onboarding/index.tsx" />
-
+        <Stack.Screen name="(routes)/onboarding/index" />
       </Stack>
     </ThemeProvider>
   )

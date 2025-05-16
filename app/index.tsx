@@ -20,7 +20,7 @@ export default function index() {
       {loading ? (
         <></>
       ) : (
-        <Redirect href={!loggedInUser ? "/(routes)/onboarding" : "/(tabs)"} />
+        <Redirect href={!loggedInUser ? "/onboarding" : "/tabs"} />
       )}
     </>
   );
