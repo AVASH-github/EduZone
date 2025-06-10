@@ -1,9 +1,8 @@
-import { View, Text, Pressable, Image, Platform } from "react-native";
-import React from 'react'
-import { BlurView } from "expo-blur";
-import {GoogleSignin} from "@react-native-google-signin/google-signin";
-import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
 import { fontSizes, windowHeight, windowWidth } from "@/themes/app.constant";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { BlurView } from "expo-blur";
+import React from 'react';
+import { Image, Platform, Pressable, Text, View } from "react-native";
 
 
 
@@ -11,11 +10,12 @@ export default function AuthModal() {
 
 
 const configureGoogleSignIn = () => {
-        if(Platform.OS==="android"){
-            GoogleSignin.configure({
-                
-            })
-        }
+        if (Platform.OS === "android") {
+      GoogleSignin.configure({
+        webClientId:
+          "518996370121-d8njj8kg0fpocjnanijnotlk7srnf884.apps.googleusercontent.com",
+      });
+    }
   };
 
   const googleSignIn= async ()=>{
@@ -35,8 +35,7 @@ const configureGoogleSignIn = () => {
           borderRadius: 30,
           alignItems: "center",
           justifyContent: "center",
-           marginTop :650 ,
-        marginLeft:400,
+          
         }}
       >
         <Text
