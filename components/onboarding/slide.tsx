@@ -1,9 +1,25 @@
-import { Platform, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
-import { HEIGHT, WIDTH } from '@/configs/constants';
-import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
-import { fontSizes, SCREEN_WIDTH, windowHeight, windowWidth } from '@/themes/app.constant';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Pressable,
+  Platform,
+  Modal,
+} from "react-native";
+import React, { useState } from "react";
+import { Defs, RadialGradient, Rect, Stop, Svg } from "react-native-svg";
+import { HEIGHT, WIDTH } from "@/configs/constants";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import {
+  fontSizes,
+  SCREEN_WIDTH,
+  windowHeight,
+  windowWidth,
+} from "@/themes/app.constant";
+import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
+import AuthModal from "../auth/auth.modal";
 
 export default function Slide({
   slide,
@@ -16,16 +32,25 @@ export default function Slide({
   setIndex: (value: number) => void;
   totalSlides: number;
 }) {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handlePress = (index: number, setIndex: (index: number) => void) => {
+    if (index === 2) {
+      setModalVisible(true);
+    } else {
+      setIndex(index + 1);
+    }
+  };
+
   return (
     <>
-     <Svg style={StyleSheet.absoluteFill}>
- <Defs>
+      <Svg style={StyleSheet.absoluteFill}>
+        <Defs>
           <RadialGradient id="gradient" cx="50%" cy="35%">
             <Stop offset="0%" stopColor={slide.color} />
             <Stop offset="100%" stopColor={slide.color} />
           </RadialGradient>
         </Defs>
-
         <Rect
           x={0}
           y={0}
@@ -33,12 +58,11 @@ export default function Slide({
           height={HEIGHT}
           fill={"url(#gradient)"}
         />
-
-     </Svg>
-
-     <View style={styles.container}>
+      </Svg>
+      <View style={styles.container}>
         <View>{slide.image}</View>
-       <View
+        <View>
+          <View
             style={{
               width: SCREEN_WIDTH * 1,
               paddingHorizontal: verticalScale(25),
@@ -52,9 +76,9 @@ export default function Slide({
                 fontFamily: "Poppins_600SemiBold",
               }}
             >
-                 {slide.title}
+              {slide.title}
             </Text>
-<Text
+            <Text
               style={{
                 fontSize: fontSizes.FONT30,
                 fontWeight: "600",
@@ -64,7 +88,7 @@ export default function Slide({
             >
               {slide.secondTitle}
             </Text>
-             <Text
+            <Text
               style={{
                 paddingVertical: verticalScale(4),
                 fontSize: fontSizes.FONT18,
@@ -74,12 +98,66 @@ export default function Slide({
             >
               {slide.subTitle}
             </Text>
+          </View>
         </View>
-     </View>
-     
+      </View>
+      <View style={styles.indicatorContainer}>
+        {Array.from({ length: totalSlides }).map((_, i) => (
+          <TouchableOpacity
+            key={i}
+            style={[styles.indicator, i === index && styles.activeIndicator]}
+          />
+        ))}
+      </View>
+      {/* Next Button */}
+      {index <= totalSlides - 1 && (
+        <LinearGradient
+          colors={["#6D55FE", "#8976FC"]}
+          style={styles.nextButton}
+        >
+          <Pressable
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              height: "100%",
+            }}
+            onPress={() => handlePress(index, setIndex)}
+          >
+            <Text style={styles.nextButtonText}>Next</Text>
+          </Pressable>
+        </LinearGradient>
+      )}
+      {index < totalSlides - 1 && (
+        <TouchableOpacity
+          style={styles.arrowButton}
+          onPress={() => handlePress(index, setIndex)}
+        >
+          <Ionicons
+            name="chevron-forward-outline"
+            size={scale(18)}
+            color="black"
+          />
+        </TouchableOpacity>
+      )}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        {/* setModalVisible should be false */}
+        <Pressable style={{ flex: 1 }} onPress={() => setModalVisible(true)}> 
+          <AuthModal />
+        </Pressable>
+      </Modal>
     </>
-  )
+  );
 }
+
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
