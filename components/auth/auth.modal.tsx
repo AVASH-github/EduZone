@@ -1,8 +1,27 @@
 import { View, Text, Pressable, Image, Platform } from "react-native";
 import React from 'react'
 import { BlurView } from "expo-blur";
+import {GoogleSignin} from "@react-native-google-signin/google-signin";
+import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
 import { fontSizes, windowHeight, windowWidth } from "@/themes/app.constant";
+
+
+
 export default function AuthModal() {
+
+
+const configureGoogleSignIn = () => {
+        if(Platform.OS==="android"){
+            GoogleSignin.configure({
+                
+            })
+        }
+  };
+
+  const googleSignIn= async ()=>{
+
+  }
+
   return (
    <BlurView
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -43,8 +62,39 @@ export default function AuthModal() {
             flexDirection: "row",
             gap: windowWidth(20),
           }}
-        ></View>
-        
+        >
+ <Pressable onPress={googleSignIn}>
+            <Image
+              source={require("@/assets/images/onboarding/google.png")}
+              style={{
+                width: windowWidth(40),
+                height: windowHeight(40),
+                resizeMode: "contain",
+              }}
+            />
+</Pressable>
+<Pressable >
+            <Image
+              source={require("@/assets/images/onboarding/github.png")}
+              style={{
+                width: windowWidth(40),
+                height: windowHeight(40),
+                resizeMode: "contain",
+              }}
+            />
+          </Pressable>
+<Pressable>
+            <Image
+              source={require("@/assets/images/onboarding/apple.png")}
+              style={{
+                width: windowWidth(40),
+                height: windowHeight(40),
+                resizeMode: "contain",
+              }}
+            />
+          </Pressable>
+        </View>
+
       </Pressable>
       </BlurView>
   )
