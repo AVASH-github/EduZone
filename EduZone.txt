@@ -1,0 +1,24 @@
+web client 1 -      74598101794-q72vs70hd0qiarvd1svimbrgb03dn6ce.apps.googleusercontent.com
+android client id - 74598101794-i7ngnc0uv0678pd9ddrmuf4vm65863ld.apps.googleusercontent.com
+ios - 74598101794-pjprd1cgd3rmpt88jjftn2am8rg4ojcf.apps.googleusercontent.com
+
+
+
+
+mongo db_password= Gbd9GFjNTRsQgCbp
+
+
+mongodb+srv://avashnepal:Gbd9GFjNTRsQgCbp@eduzone.6ihrc9d.mongodb.net/
+
+
+Database name: eduzone
+
+Collection name: eduZone
+
+GitHub client secret : bb9c6f88e43cd114f6b7928506334590639d97c0
+
+
+
+D:\Software\EduZone\server>npm run dev
+
+ngrok http 3000

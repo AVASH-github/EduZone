@@ -1,29 +1,41 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { ThemeProvider } from "@/context/theme.context";
+import {
+  Poppins_300Light,
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
+  Poppins_700Bold,
+  useFonts,
+} from "@expo-google-fonts/poppins";
+import { Stack } from "expo-router";
+import React from "react";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+// SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
+const _layout = () => {
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    Poppins_600SemiBold,
+    Poppins_300Light,
+    Poppins_700Bold,
+    Poppins_400Regular,
+    Poppins_500Medium,
   });
 
   if (!loaded) {
-    // Async font loading only occurs in development.
     return null;
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+    <ThemeProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(routes)/onboarding/index" />
       </Stack>
-      <StatusBar style="auto" />
     </ThemeProvider>
   );
-}
+};
+
+export default _layout;
+
