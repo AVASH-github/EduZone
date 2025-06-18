@@ -21,7 +21,7 @@ export default function ResourcesScreen() {
         flex: 1,
       }}
     >
-        <ScrollView showsVerticalScrollIndicator={false} > 
+       
        <View style={{ paddingBottom: bottomTabBarHeight - 20 }}>
           <FlatList
             data={videoLessonsData}
@@ -32,7 +32,7 @@ export default function ResourcesScreen() {
             }}
           />
         </View>
-        </ScrollView>
+      
     </SafeAreaView>
   );
 }

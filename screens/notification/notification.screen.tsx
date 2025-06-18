@@ -159,7 +159,7 @@ export default function NoficationScreen() {
               color: theme.dark ? "#fff" : "#000",
               textAlign: "center",
               width: scale(200),
-              fontSize: fontSizes.FONT25,
+              fontSize: fontSizes.FONT28,
             }}
           >
             Notifications
@@ -167,8 +167,8 @@ export default function NoficationScreen() {
 
         </View>
         </View>
-         <ScrollView
-              contentContainerStyle={[
+         <View
+              style={[
                   styles.container,
                   {
                     backgroundColor: theme.dark ? "#101010" : "#fff",
@@ -317,6 +317,7 @@ export default function NoficationScreen() {
             </View>
 
             <FlatList
+            
               data={NotificationsData}
               renderItem={renderItem}
               keyExtractor={(item) => item.id}
@@ -326,7 +327,7 @@ export default function NoficationScreen() {
 
           
 
-              </ScrollView>
+              </View>
     </SafeAreaView>
   )
 }

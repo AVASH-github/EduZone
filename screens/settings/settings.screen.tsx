@@ -80,7 +80,7 @@ export default function SettingsScreen() {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          height: verticalScale(25),
+          height: verticalScale(35),
           backgroundColor: theme.dark ? "#131313" : "#fff",
           paddingHorizontal: scale(10),
           paddingBottom: verticalScale(5),
@@ -93,17 +93,17 @@ export default function SettingsScreen() {
       >
         <Pressable
           onPress={() => router.back()}
-          style={{ flexDirection: "row", alignItems: "center", gap: scale(5) }}
+          style={{ flexDirection: "row", alignItems: "center", gap: scale(2) }}
         >
           <AntDesign
             name="left"
-            size={scale(20)}
+            size={scale(22)}
             color={theme.dark ? "#fff" : "#005DE0"}
           />
         <Text
           style={{
             color: theme.dark ? "#fff" : "#005DE0",
-            fontSize: fontSizes.FONT20,
+            fontSize: fontSizes.FONT25,
           }}
         >
           Back
@@ -113,8 +113,8 @@ export default function SettingsScreen() {
           style={{
             color: theme.dark ? "#fff" : "#000",
             textAlign: "center",
-            width: scale(220),
-            fontSize: fontSizes.FONT22,
+            width: scale(200),
+            fontSize: fontSizes.FONT28,
           }}
         >
           Settings

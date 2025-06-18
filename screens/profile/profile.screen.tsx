@@ -3,28 +3,27 @@ import { useTheme } from "@/context/theme.context";
 import useUser from "@/hooks/fetch/useUser";
 import useUserData from "@/hooks/useUserData";
 import {
-    fontSizes,
-    IsAndroid,
-    IsHaveNotch,
-    IsIPAD,
+  fontSizes,
+  IsAndroid,
+  IsHaveNotch,
+  IsIPAD,
 } from "@/themes/app.constant";
 import { Feather, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import * as WebBrowser from "expo-web-browser";
 import React from 'react';
 import {
-    Image,
-    SafeAreaView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    View
+  Image,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View
 } from "react-native";
-import { Pressable, ScrollView, GestureHandlerRootView  } from "react-native-gesture-handler";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Pressable, ScrollView } from "react-native-gesture-handler";
 import { scale, verticalScale, } from "react-native-size-matters";
-import * as SecureStore from "expo-secure-store";
-import { router } from "expo-router";
-import * as WebBrowser from "expo-web-browser";
 
 
 export default function ProfileScreen() {
@@ -132,6 +131,7 @@ export default function ProfileScreen() {
          }}
         >
 
+           {/* Enrolled Courses */}
           <Pressable
           style={{
             flexDirection: "row",
@@ -184,7 +184,9 @@ export default function ProfileScreen() {
             </View>
           </View>
         </Pressable>
-<Pressable
+
+                {/*Course Leaderboard */ }
+        <Pressable
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -235,14 +237,16 @@ export default function ProfileScreen() {
             </View>
           </View>
         </Pressable>
- <Pressable
+
+                  {/*My Tickets */ }
+        <Pressable
           style={{
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
             marginBottom: verticalScale(20),
           }}
-         
+         onPress={() => router.push("/(routes)/my-tickets")}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
@@ -287,6 +291,8 @@ export default function ProfileScreen() {
             </View>
           </View>
         </Pressable>
+
+        {/* Support Center */ }
          <Pressable
           style={{
             flexDirection: "row",
@@ -294,7 +300,7 @@ export default function ProfileScreen() {
             justifyContent: "space-between",
             marginBottom: verticalScale(20),
           }}
-         
+         onPress={()=> router.push("/(routes)/support-center")}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
@@ -340,8 +346,8 @@ export default function ProfileScreen() {
           </View>
         </Pressable>
 
-
-<Pressable
+                  {/* Notifications */ }
+        <Pressable
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -395,7 +401,9 @@ export default function ProfileScreen() {
           </View>
         </Pressable>
 
-<Pressable
+
+                {/* Settings */ }
+        <Pressable
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -448,7 +456,8 @@ export default function ProfileScreen() {
           </View>
         </Pressable>
 
-  <Pressable
+                  {/* Privacy & Policy */ }
+        <Pressable
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -504,7 +513,9 @@ export default function ProfileScreen() {
             </View>
           </View>
         </Pressable>
-    <Pressable
+
+        {/* Log Out */ }
+        <Pressable
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -557,6 +568,8 @@ export default function ProfileScreen() {
             </View>
           </View>
         </Pressable>
+
+
         </ScrollView>
 
                   
