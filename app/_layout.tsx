@@ -9,9 +9,7 @@ import {
 } from "@expo-google-fonts/poppins";
 import { Stack } from "expo-router";
 import React from "react";
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-// SplashScreen.preventAutoHideAsync();
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const _layout = () => {
   const [loaded] = useFonts({
@@ -28,14 +26,20 @@ const _layout = () => {
   }
 
   return (
-    <ThemeProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="(routes)/onboarding/index" />
-      </Stack>
+     <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(routes)/onboarding/index" />
+          
+        </Stack>
+
     </ThemeProvider>
+    </GestureHandlerRootView>
+    
   );
 };
 
-export default _layout;
 
+
+export default _layout;

@@ -148,6 +148,7 @@ const authHandler = async ({
 
     const token = jwt.encode(user, process.env.EXPO_PUBLIC_JWT_SECRET_KEY!);
 
+    console.log("Token being sent to backend:", token); // <-- Add here
     console.log(`Making API request to server at ${SERVER_URL}`);
 
     const res = await axios.post(`${SERVER_URL}/login`, {

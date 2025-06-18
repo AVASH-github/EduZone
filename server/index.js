@@ -6,6 +6,8 @@ import prisma from "./utils/prisma.js";
 import { sendToken } from "./utils/sendToken.js";
 
 dotenv.config();
+console.log("JWT_SECRET_KEY from env:", process.env.JWT_SECRET_KEY);
+
 
 const app = express();
 const PORT = 3000;
@@ -24,9 +26,14 @@ testPrisma();
 
 // Routes
 app.post("/login", async (req, res) => {
+
   try {
+      console.log("🔥 /login route hit");
+    console.log("Request body:", req.body);
     const { signedToken } = req.body;
+     console.log("Signed token:", signedToken);
     const data = jwt.verify(signedToken, process.env.JWT_SECRET_KEY);
+        console.log("JWT payload data:", data);
     if (data) {
       const isUserExist = await prisma.user.findUnique({
         where: {
@@ -58,6 +65,7 @@ app.post("/login", async (req, res) => {
     message: "Unauthorized request",
   });
   }
+ 
 });
 
 app.get("/me", isAuthenticated, async (req, res, next) => {

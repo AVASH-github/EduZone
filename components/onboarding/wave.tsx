@@ -11,8 +11,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { HEIGHT, MIN_LEDGE, Side, WIDTH } from "@/configs/constants";
 import { Vector } from "react-native-redash";
-import MaskedView from "@react-native-community/masked-view";
-
+import MaskedView from "@react-native-masked-view/masked-view"
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 interface WaveProps {
