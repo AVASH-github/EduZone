@@ -230,7 +230,7 @@ export default function SupportCenterScreen() {
             flexDirection: "row",
             gap: scale(10),
           }}
-          onPress={() => Linking.openURL("mailto:nepalavash20@gmail.com")}
+          onPress={() => Linking.openURL("mailto:avashnepal123@gmail.com")}
         >
           <IconThree />
           <View>

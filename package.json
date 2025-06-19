@@ -54,7 +54,8 @@
     "react-native-swipeable": "^0.6.0",
     "react-native-swiper": "^1.6.0",
     "react-native-web": "~0.20.0",
-    "react-native-webview": "13.13.5"
+    "react-native-webview": "13.13.5",
+    "tailwindcss": "^4.1.10"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

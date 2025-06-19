@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, FlatListComponent, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useState } from 'react'
 import {LinearGradient} from 'expo-linear-gradient'
 import { useTheme } from "@/context/theme.context";
@@ -13,10 +13,13 @@ import {
 import { scale, verticalScale } from "react-native-size-matters";
 import GradiantText from "@/components/common/gradient.test";
 import SkeltonLoader from "@/utils/skelton";
+import useGetCourses from "@/hooks/fetch/useGetCourses";
+import CourseCard from "@/components/cards/course.card";
 
 export default function HomeScreen() {
       const { theme } = useTheme();
-      const [loading, setLoading] = useState(true);
+      
+       const { courses, loading } = useGetCourses();
   return (
     <>
               <LinearGradient
@@ -85,6 +88,15 @@ export default function HomeScreen() {
                         </>
                     ): (
                         <View> 
+                          <FlatList
+                            data={courses}
+                            keyExtractor={(item) => item.id}
+                            renderItem={({item}) => <CourseCard item={item} />}
+                              ListEmptyComponent={<Text>No courses Available yet!</Text>}
+                          >
+
+                          </FlatList>
+
                          </View>
                     )
                     }
