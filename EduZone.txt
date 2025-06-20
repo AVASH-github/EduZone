@@ -22,3 +22,5 @@ GitHub client secret : bb9c6f88e43cd114f6b7928506334590639d97c0
 D:\Software\EduZone\server>npm run dev
 
 ngrok http 3000
+
+

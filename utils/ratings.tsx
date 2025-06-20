@@ -12,25 +12,26 @@ const Ratings: FC<Props> = ({ rating }) => {
   for (let i = 1; i <= 5; i++) {
     if (i <= rating) {
       stars.push(
-        <View style={{ marginLeft: 5 }}>
+        <View key={`full-${i}`} style={{ marginLeft: 5 }}>
           <FontAwesome name="star" size={24} color="#F6B100" />
         </View>
       );
     } else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
       stars.push(
-        <View>
+        <View key={`half-${i}`}>
           <FontAwesome name="star-half-empty" size={24} color="#F6B100" />
         </View>
       );
     } else {
       stars.push(
-        <View>
+        <View key={`empty-${i}`}>
           <FontAwesome name="star-o" size={24} color="#F6B100" />
         </View>
       );
     }
   }
-  return <Text>{stars}</Text>;
+
+  return <View style={{ flexDirection: "row" }}>{stars}</View>; // Use View to wrap stars
 };
 
 export default Ratings;

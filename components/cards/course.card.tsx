@@ -21,17 +21,18 @@ export default function CourseCard({ item }: { item: CourseType }) {
         paddingHorizontal: windowWidth(5),
         paddingVertical: windowHeight(5),
       }}
-    //   onPress={() =>
-    //     router.push({
-    //       pathname: "/(routes)/course-details",
-    //       params: {
-    //         ...(item as any),
-    //         prerequisites: JSON.stringify(item.prerequisites),
-    //         benefits: JSON.stringify(item.benefits),
-    //         courseContent: JSON.stringify(item.courseData),
-    //       },
-    //     })
-    //   }
+   onPress={() =>{
+    console.log(item);
+        router.push({
+          pathname: "/(routes)/course-details",
+          params: {
+            ...(item as any),
+            prerequisites: JSON.stringify(item.prerequisites),
+            benefits: JSON.stringify(item.benefits),
+            courseContent: JSON.stringify(item.courseData),
+          },
+        })
+      }}
     >
       <View
         style={[

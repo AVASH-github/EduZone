@@ -111,6 +111,30 @@ app.get("/", (req, res) => {
   }
 });
 
+
+app.get("/get-reviews/:courseId", async (req, res) => {
+  const reviewsData = await prisma.reviews.findMany({
+    where: {
+      courseId: req.params.courseId,
+    },
+    include: {
+      user: true,
+      replies: {
+        include: {
+          user: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  res.status(201).json({
+    success: true,
+    reviewsData,
+  });
+});
+
 // Start server - this must be outside all route handlers
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

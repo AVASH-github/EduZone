@@ -7,29 +7,24 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const subscription = async () => {
-      
-        const token = SecureStore.getItem("accessToken");
-        setLoggedInUser(token ? true : false);
-    setLoading(false);
-        
-      }; 
-    
-    subscription();
+    const checkAuth = async () => {
+      try {
+        const token = await SecureStore.getItemAsync("accessToken");
+        setLoggedInUser(!!token);
+      } catch (error) {
+        console.error("Error checking auth:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkAuth();
   }, []);
 
- 
-  return (
-    <>
-      { loading ? (
-        <></>
-      ) : (
-        <Redirect href={!loggedInUser ? "/(routes)/onboarding" :"/(tabs)" } />
+  if (loading) {
+    return null;
+  }
 
-        )}
-    </>
-  );
-}
-
+  return <Redirect href={!loggedInUser ? "/(routes)/onboarding" : "/(tabs)"} />;
+};
 
 export default Index;
