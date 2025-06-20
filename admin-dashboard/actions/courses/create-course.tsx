@@ -10,13 +10,19 @@ cloudinary.config({
   secure: true,
 });
 
-const uploadImageToCloudinary = async (image: string) => {
+// Function to upload image to Cloudinary
+const uploadImageToCloudinary = async (image:string) => {
+  if (!image.startsWith("data:image")) {
+    return image; // Return the URL if it's not a base64 image
+  }
   try {
+    console.log("Uploading image to Cloudinary...");
     const result = await cloudinary.uploader.upload(image, {
-      folder: "courses",
       resource_type: "image",
+       folder: "courses",
     });
-    return result.secure_url;
+    console.log("Upload result:", result);
+    return result.secure_url; // Return the secure URL of the uploaded image
   } catch (error) {
     console.error("Error uploading image to Cloudinary:", error);
     throw new Error("Image upload failed");

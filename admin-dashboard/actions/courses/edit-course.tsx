@@ -5,9 +5,9 @@ const cloudinary = require("cloudinary").v2;
 
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: "",
-  api_key: "",
-  api_secret: "",
+   cloud_name: "dthekfecp",
+  api_key: "214135112385349",
+  api_secret: "m6gjCaXsrDOuDntEQe_s-hsJxCI",
   secure: true,
 });
 
@@ -16,8 +16,8 @@ const uploadImageToCloudinary = async (image: string): Promise<string> => {
   try {
     if (!image) throw new Error("No image provided for upload.");
     const result = await cloudinary.uploader.upload(image, {
-      folder: "courses",
       resource_type: "image",
+       folder: "courses",
     });
     return result.secure_url;
   } catch (error) {

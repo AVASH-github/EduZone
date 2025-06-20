@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import { DeleteCourse } from "@/actions/courses/delete-course";
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -44,7 +45,23 @@ export default function Page() {
 
     fetchCourses();
   }, []);
-
+  
+const handleDeleteCourse = async (slug: string) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this course?");
+    if (!confirmDelete) return;
+    try {
+      const result = await DeleteCourse(slug);
+      if (result.success) {
+        // Refresh the course list after deletion
+        setData((prevData) => prevData.filter(course => course.slug !== slug));
+      } else {
+        setError(result.message);
+      }
+    } catch (error) {
+      console.error("Error deleting course:", error);
+      setError("Failed to delete course.");
+    }
+  };
   return (
     <div className="w-[92%] m-auto mt-10">
       {isLoading && <p>Loading...</p>}
@@ -86,7 +103,7 @@ export default function Page() {
                   </TableCell>
                   <TableCell>
                     <button
-                      onClick={() => console.log(`Delete ${course.id}`)}
+                     onClick={() => handleDeleteCourse(course.slug)}
                       className="text-red-500 hover:underline"
                     >
                       Delete

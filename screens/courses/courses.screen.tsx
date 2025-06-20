@@ -1,5 +1,5 @@
 import { FlatList, ScrollView, StatusBar, Text, View } from "react-native";
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import { useTheme } from "@/context/theme.context";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,42 +9,49 @@ import {
   windowHeight,
   windowWidth,
 } from "@/themes/app.constant";
-import SkeltonLoader from "@/utils/skelton";
-import GradiantText from "@/components/common/gradient.test";
 import { scale, verticalScale } from "react-native-size-matters";
+import SkeltonLoader from "@/utils/skelton";
+import CourseCard from "@/components/cards/course.card";
+import useGetCourses from "@/hooks/fetch/useGetCourses";
+import GradientText from "@/components/common/gradient.text";
 
 export default function CoursesScreen() {
-    const {theme} = useTheme();
-    const buttomTabVarHeight = useBottomTabBarHeight();
-        const [loading, setLoading] = useState(true);
+  const { theme } = useTheme();
+  const { courses, loading } = useGetCourses();
+
   return (
     <SafeAreaView
-    style={{
-                flex: 1,
+      style={{
+        flex: 1,
         backgroundColor: theme.dark ? "#131313" : "#fff",
-    }}
+      }}
     >
-        <ScrollView showsVerticalScrollIndicator={false} 
-        style={{marginTop: verticalScale(-30)}}>
-         <StatusBar barStyle={!theme.dark ? "dark-content" : "light-content"} />
+      <View style={{ marginTop: verticalScale(-35) }}>
+        <StatusBar barStyle={!theme.dark ? "dark-content" : "light-content"} />
+        {loading ? (
+          <View>
+            <SkeltonLoader />
+            <SkeltonLoader />
+          </View>
+        ) : (
+          <View
+            style={{
+              paddingHorizontal: scale(8),
+            }}
+          >
+            <FlatList
+              data={courses}
+              ListHeaderComponent={() => (
+                <View style={{ marginHorizontal: windowWidth(20) }}>
+        
+<View style={{ backgroundColor: 'transparent',marginTop: windowHeight(8) }}>
+  
+  <GradientText text="Popular Courses" 
+  
+  />
 
-         <View style={{marginHorizontal: windowWidth(20)}}>
-          <View style={{ flexDirection: "row", marginTop: windowHeight(8) }}>
-      <Text
-                      style={{
-                        fontSize: fontSizes.FONT35,
-                        fontFamily: "Poppins_500Medium",
-                        color: theme.dark ? "#fff" : "#000",
-                      }}
-                    >
-                      Popular &nbsp;   
-                       <Text style={{color: "#6D55FE"}}>
-                         Courses
-                      </Text>
-                    </Text>
-                    
-                  </View>
-                   <View style={{ flexDirection: "row", alignItems: "center" }}>
+</View>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <View
                       style={{
                         backgroundColor: "#12BB70",
@@ -66,19 +73,25 @@ export default function CoursesScreen() {
                       Our comprehensive project based courses
                     </Text>
                   </View>
-                  </View>
-{loading ? (
-                        <>
-                            <SkeltonLoader />
-                            <SkeltonLoader />
-                        </>
-                    ): (
-                        <View> 
-                         </View>
-                    )
-                    }
-        </ScrollView>
-
+                </View>
+              )}
+              keyExtractor={(item) => item.id}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item }) => <CourseCard item={item} />}
+              ListEmptyComponent={<Text>No courses Available yet!</Text>}
+              ListFooterComponent={() => (
+                <View
+                  style={{
+                    paddingBottom: theme.dark
+                      ? verticalScale(40)
+                      : verticalScale(0),
+                  }}
+                ></View>
+              )}
+            />
+          </View>
+        )}
+      </View>
     </SafeAreaView>
-  )
+  );
 }

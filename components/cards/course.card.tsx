@@ -43,7 +43,7 @@ export default function CourseCard({ item }: { item: CourseType }) {
       >
         <Image
           source={{
-            uri: item.thumbnail
+            uri: item.thumbnail ,
         }}
           resizeMode="contain"
           style={{

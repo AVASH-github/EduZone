@@ -11,15 +11,15 @@ import {
   windowWidth,
 } from "@/themes/app.constant";
 import { scale, verticalScale } from "react-native-size-matters";
-import GradiantText from "@/components/common/gradient.test";
 import SkeltonLoader from "@/utils/skelton";
 import useGetCourses from "@/hooks/fetch/useGetCourses";
 import CourseCard from "@/components/cards/course.card";
-
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 export default function HomeScreen() {
       const { theme } = useTheme();
       
        const { courses, loading } = useGetCourses();
+         const bottomTabBarHeight = useBottomTabBarHeight();
   return (
     <>
               <LinearGradient
@@ -77,7 +77,7 @@ export default function HomeScreen() {
                             color: theme.dark ? "#fff" : "#000",
                           }}
                         >
-                          our comprehensive project based courses
+                          Our comprehensive project based courses
                         </Text>
                       </View>
                     </View>
@@ -87,15 +87,28 @@ export default function HomeScreen() {
                             <SkeltonLoader />
                         </>
                     ): (
-                        <View> 
+                      
+                        <View
+                        style={{
+                         paddingBottom: theme.dark
+                          ? bottomTabBarHeight + 10
+                          : IsAndroid 
+                          ? bottomTabBarHeight + 10
+                          : 0,  
+                           paddingHorizontal: scale(8),
+                        }}
+                        > 
+                          
+                          console.log(courses);
                           <FlatList
                             data={courses}
                             keyExtractor={(item) => item.id}
                             renderItem={({item}) => <CourseCard item={item} />}
                               ListEmptyComponent={<Text>No courses Available yet!</Text>}
-                          >
+                              
+                          />
 
-                          </FlatList>
+                       
 
                          </View>
                     )
