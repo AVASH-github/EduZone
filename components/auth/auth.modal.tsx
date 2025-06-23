@@ -1,14 +1,14 @@
-import { View, Text, Pressable, Image, Platform } from "react-native";
-import React, { useEffect } from "react";
-import { BlurView } from "expo-blur";
 import { fontSizes, windowHeight, windowWidth } from "@/themes/app.constant";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
-import jwt from "expo-jwt";
 import axios from "axios";
-import * as SecureStore from "expo-secure-store";
+import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
+import { BlurView } from "expo-blur";
+import jwt from "expo-jwt";
 import { router } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import * as WebBrowser from "expo-web-browser";
+import React, { useEffect } from "react";
+import { Image, Platform, Pressable, Text, View } from "react-native";
 // Read server URL from env, fallback to localhost
 const SERVER_URL = process.env.EXPO_PUBLIC_SERVER_URI ?? "http://localhost:3000";
 
@@ -102,9 +102,9 @@ export default function AuthModal({
 
     const userData = await userResponse.json();
     await authHandler({
-      name: userData.name!,
-      email: userData.email!,
-      avatar: userData.avatar_url!,
+     name: userData.name || userData.login, 
+      email: userData.email || `${userData.login}@users.noreply.github.com`, // Fallback email
+      avatar: userData.avatar_url,
     });
   };
 
@@ -190,7 +190,7 @@ const authHandler = async ({
             fontFamily: "Poppins_700Bold",
           }}
         >
-          Join to Becodemy
+          Join to EduZone
         </Text>
         <Text
           style={{

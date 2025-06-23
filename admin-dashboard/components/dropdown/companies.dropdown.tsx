@@ -12,8 +12,8 @@ import DownArrow from "../icons/downarrow";
 
 const CompaniesDropdown = () => {
   const [company, setCompany] = useState({
-    name: "Betafier inc.",
-    location: "Manchestar, UK",
+    name: "Admin DashBoard",
+    location: "Ktm, Nepal",
     logo: <Logo />,
   });
   return (
@@ -24,10 +24,10 @@ const CompaniesDropdown = () => {
             <Logo />
             <Box>
               <h3 className="text-xl font-medium dark:text-[#ecedee]">
-                Betafier Inc.
+                Admin DashBoard
               </h3>
               <h5 className="font-medium text-xs dark:text-[#ecedeecf]">
-                Manchestar, Uk
+                
               </h5>
             </Box>
             <div className="mt-[10px]">
@@ -40,14 +40,14 @@ const CompaniesDropdown = () => {
         onAction={(e) => {
           if (e === "1") {
             setCompany({
-              name: "Betafier Inc.",
+              name: "Admin DashBoard",
               location: "San Fransico, CA",
               logo: <Logo />,
             });
           }
           if (e === "2") {
             setCompany({
-              name: "Vidmox Plc.",
+              name: "Admin DashBoard",
               location: "San Fransico, CA",
               logo: <Logo />,
             });
@@ -59,9 +59,9 @@ const CompaniesDropdown = () => {
           <DropdownItem
             key="1"
             startContent={<Logo />}
-            description="A Programming Community"
+            description=""
           >
-            Becodemy Private Ltd.
+            Avash Nepal 
           </DropdownItem>
         </DropdownSection>
       </DropdownMenu>

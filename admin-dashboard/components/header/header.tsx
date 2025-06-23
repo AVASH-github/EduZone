@@ -1,19 +1,18 @@
 "use client";
-import React, { useState } from "react";
-import { Navbar, NavbarContent } from "@nextui-org/navbar";
-import { Input } from "@nextui-org/input";
-import { SearchIcon } from "../icons";
-import FeedbackIcon from "../icons/feed-back-icon";
 import { Badge } from "@nextui-org/badge";
-import { FaMessage } from "react-icons/fa6";
+import { Input } from "@nextui-org/input";
+import { Navbar, NavbarContent } from "@nextui-org/navbar";
 import {
   Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
   DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   User,
 } from "@nextui-org/react";
 import Link from "next/link";
+import { FaMessage } from "react-icons/fa6";
+import { SearchIcon } from "../icons";
+import FeedbackIcon from "../icons/feed-back-icon";
 import Notifications from "../notifications/notifications";
 
 const Header = () => {
@@ -23,7 +22,7 @@ const Header = () => {
       maxWidth="full"
       className="w-full flex items-center !justify-start"
     >
-      <div className="w-full flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between w-full gap-4">
         <NavbarContent className="w-full">
           <Input
             isClearable
@@ -60,14 +59,14 @@ const Header = () => {
                   className="transition-transform w-[150px]"
                   avatarProps={{
                     isBordered: true,
-                    src: "https://avatars.githubusercontent.com/u/87035691?v=4",
+                    src: "/10.jpg",
                   }}
-                  description="@shahriarsajeeb"
-                  name="Shahriar"
+                  description="@avashnepal"
+                  name="Avash"
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="profile" className="h-14 gap-2">
+                <DropdownItem key="profile" className="gap-2 h-14">
                   <p className="font-semibold">Signed in as</p>
                   <p className="font-semibold">shahriar@becodemy.com</p>
                 </DropdownItem>

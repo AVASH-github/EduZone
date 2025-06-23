@@ -3,7 +3,7 @@ import { atom } from "jotai";
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Betafier Admin",
+  name: "My Admin  DashBoard",
   description: "Make beautiful websites regardless of your design experience.",
   navItems: [
     {
