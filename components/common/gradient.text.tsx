@@ -9,7 +9,7 @@ export default function GradientText({ text }: { text: string }) {
         <Defs>
           <LinearGradient id="grad" x1="0" y1="0" x2="100%" y2="0">
             <Stop offset="0" stopColor="#6D55FE" />
-            <Stop offset="1" stopColor="#000000" />
+            <Stop offset="1" stopColor="#FFFFFF" />
           </LinearGradient>
         </Defs>
         <SvgText

@@ -139,3 +139,90 @@ app.get("/get-reviews/:courseId", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+
+
+///testing khalti integration 
+
+// Create order after verifying Khalti payment
+app.get("/khalti-verify-payment", async (req, res) => {
+  console.log("📥 Incoming query params:", req.query);
+
+  const { pidx, userId } = req.query;
+  let { purchase_order_id } = req.query;
+
+  // 🛠️ Fix if it's an array (Khalti often sends it twice)
+  if (Array.isArray(purchase_order_id)) {
+    purchase_order_id = purchase_order_id[0];
+  }
+
+  // ❗Check presence of essential data
+  if (!pidx || !userId || !purchase_order_id) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing pidx, userId, or purchase_order_id",
+    });
+  }
+
+  console.log("🧾 Parsed values →");
+  console.log("pidx:", pidx);
+  console.log("purchase_order_id:", purchase_order_id);
+  console.log("userId:", userId);
+
+  try {
+    const response = await fetch("https://a.khalti.com/api/v2/epayment/lookup/", {
+      method: "POST",
+      headers: {
+        Authorization: `Key ${process.env.KHALTI_SECRET_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pidx }),
+    });
+
+    const data = await response.json();
+    console.log("✅ Khalti verify response:", data);
+
+    // ✅ Check status
+    if (data.status !== "Completed") {
+      return res.json({ success: false, message: "Payment not completed" });
+    }
+
+    // ✅ Extra check in case Khalti didn’t return order info
+    if (!data.transaction_id) {
+      return res.json({ success: false, message: "Missing transaction ID from Khalti" });
+    }
+
+    // ✅ Check for existing order
+    const existingOrder = await prisma.orders.findFirst({
+      where: { transaction_id: data.transaction_id },
+    });
+
+    if (existingOrder) {
+      return res.json({ success: true, message: "Already purchased" });
+    }
+
+    // ✅ Create order in DB
+    const order = await prisma.orders.create({
+      data: {
+        userId: String(userId),
+        courseId: String(purchase_order_id),
+        transaction_id: data.transaction_id,
+        payment_info: "Khalti",
+        product_id: data.purchase_order_name || "N/A",
+      },
+    });
+
+    return res.json({
+      success: true,
+      message: "Payment verified and order created",
+      courseId: purchase_order_id,
+      userId,
+      order,
+    });
+  } catch (error) {
+    console.error("❌ Error verifying Khalti payment:", error);
+    return res.json({ success: false, message: "Verification failed" });
+  }
+});
+
+

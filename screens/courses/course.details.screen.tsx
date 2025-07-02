@@ -2,7 +2,8 @@ import ReviewCard from "@/components/cards/review.card";
 import CourseDetailsTabs from "@/components/course/course.details.tabs";
 import CourseLesson from "@/components/course/course.lesson";
 import { useTheme } from "@/context/theme.context";
-import useUser from "@/hooks/fetch/useUser";
+import useUser, { setAuthorizationHeader } from "@/hooks/fetch/useUser";
+import useUserData from "@/hooks/useUserData";
 import {
   fontSizes,
   IsAndroid,
@@ -15,11 +16,12 @@ import { Spacer } from "@/utils/skelton";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { BlurView } from "expo-blur";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import React, { useState } from "react";
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -28,26 +30,122 @@ import {
   View
 } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
-
+import { Linking } from "react-native";
+import { useKhalti } from "@/src/hooks/useKhalti";
+import * as WebBrowser from "expo-web-browser";
+import { AppState } from "react-native";
 export default function CourseDetailsScreen() {
    const params: any= useLocalSearchParams();
     const [activeButton, setActiveButton] = useState("About");
     const { user, loader: userLoader } = useUser();
     const courseData: CourseType | any = params;
       const [loader, setLoader] = useState(true);
+       const [isExpanded, setIsExpanded] = useState(false);
+       const [purchaseLoader, setPurchaseLoader] = useState(false);
   const [reviews, setReviews] = useState([]);
      const prerequisites: BenefitsType[] | any = JSON.parse(params?.prerequisites);
   const benefits: BenefitsType[] | any = JSON.parse(params?.benefits);
     const courseContent: CourseDataType[] | any = JSON.parse(
     params?.courseContent
   );
-    const [isExpanded, setIsExpanded] = useState(false);
+   
 
-    const { theme } = useTheme();
+    
+  const { name, email } = useUserData();
+
+  const userOrders = user?.orders;
+  const isPurchased = userOrders?.find(
+    (i: OrderType) => i.courseId === courseData.id
+  );
+
+
+    //khalti integration 
+
+const { initiate, isLoading, initiationError } = useKhalti({
+    onSuccess: (paymentStatus) => {
+      // Handle success (optional)
+     // Alert.alert("Payment success", "You can now enter the course.");
+      // Refresh purchased courses or update UI here
+    },
+    onError: (error) => {
+      //Alert.alert("Payment failed", error.message || "Try again.");
+    },
+  });
+
+
+const handlePurchase = async () => {
+  setPurchaseLoader(true);
+
+  try {
+    await setAuthorizationHeader();
+
+    if (courseData.price === "0") {
+      // Free course logic here...
+      return;
+    }
+
+    if (!user || !user.email || !user.name) {
+      Alert.alert("Error", "User info is missing. Please login again.");
+      return;
+    }
+
+    const paymentRequest = {
+      amount: parseInt(courseData.price) * 100,
+      purchase_order_id: courseData.id,
+      purchase_order_name: courseData.name,
+      website_url: "https://eduzone.com",
+ return_url: `https://c6fd-203-9-210-139.ngrok-free.app/khalti-verify-payment?purchase_order_id=${courseData.id}&userId=${user.id}`,
+      customer_info: {
+        name: user.name,
+        email: user.email,
+        phone: "9800000000",
+      },
+    };
+
+    const response = await initiate(paymentRequest);
+
+    if (!response?.payment_url) {
+      Alert.alert("Error", "Payment initiation failed");
+      return;
+    }
+
+    // Open Khalti payment page in browser
+    const browserResult = await WebBrowser.openBrowserAsync(response.payment_url);
+
+    if (browserResult.type === "dismiss") {
+      // Browser closed, now verify payment from backend
+      const verifyResponse = await axios.get(
+        `${process.env.EXPO_PUBLIC_SERVER_URI}/khalti-verify-payment`,
+        {
+          params: { pidx: response.pidx, userId: user.id },
+        }
+      );
+
+      if (verifyResponse.data.success) {
+        Alert.alert("Success", "Payment verified. Course unlocked!");
+        // TODO: refresh user data or purchased courses here
+
+        // Navigate or refresh course details page
+        router.replace({
+          pathname: "/(routes)/course-details",
+          params: { id: courseData.id },
+        });
+      } else {
+        Alert.alert("Payment failed", verifyResponse.data.message || "Try again.");
+      }
+    }
+  } catch (error: any) {
+    console.error("Purchase error:", error);
+    Alert.alert("Error", "Something went wrong during payment.");
+  } finally {
+    setPurchaseLoader(false);
+  }
+};
 
 
 
-     const reviewsFetchingHandler = async () => {
+  const { theme } = useTheme(); 
+  const reviewsFetchingHandler = async () => {
     setActiveButton("Reviews");
 
     await axios
@@ -56,6 +154,15 @@ export default function CourseDetailsScreen() {
         setReviews(res.data.reviewsData);
         setLoader(false);
       });
+  };
+
+   const handleCourseAccess = () => {
+    router.push({
+      pathname: "/(routes)/course-access",
+      params: {
+        ...courseData,
+      },
+    });
   };
 
   return (
@@ -340,15 +447,16 @@ export default function CourseDetailsScreen() {
           paddingBottom: IsAndroid ? verticalScale(5) : windowHeight(20),
         }}
       >
-        <TouchableOpacity
+        {isPurchased ? (
+          <TouchableOpacity
             style={{
               backgroundColor: "#2467EC",
               paddingVertical: windowHeight(10),
               borderRadius: windowWidth(8),
             }}
-           // onPress={() => handleCourseAccess()}
+            onPress={() => handleCourseAccess()}
           >
-<Text
+            <Text
               style={{
                 textAlign: "center",
                 color: "#FFFF",
@@ -356,10 +464,33 @@ export default function CourseDetailsScreen() {
                 fontFamily: "Poppins_600SemiBold",
               }}
             >
-              Buy Now {""}
-              {courseData ?.price === "0" ? "(free)" : `$${courseData?.price}`}
+              Enter to course
             </Text>
           </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#2467EC",
+              paddingVertical: windowHeight(10),
+              borderRadius: windowWidth(8),
+              opacity: purchaseLoader ? 0.6 : 1,
+            }}
+            disabled={purchaseLoader}
+            onPress={handlePurchase}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#FFFF",
+                fontSize: fontSizes.FONT24,
+                fontFamily: "Poppins_600SemiBold",
+              }}
+            >
+              Buy now{" "}
+              {courseData?.price === "0" ? "(free)" : `$${courseData?.price}`}
+            </Text>
+          </TouchableOpacity>
+        )}
       </BlurView>
    </View>
   )

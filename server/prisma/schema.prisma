@@ -138,16 +138,17 @@ model Orders {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
   userId         String   @db.ObjectId
   user           User     @relation(fields: [userId], references: [id])
-  payment_info   String?
-  product_id     String?
-  transaction_id String?
-  androidOrderId String?
-  purchaseToken  String?
+  payment_info   String?  // e.g., "Khalti", "Google IAP"
+  product_id     String?  // Course name
+  transaction_id String?  // Unique Khalti transaction ID
+  androidOrderId String?  // Optional (for IAP)
+  purchaseToken  String?  // Optional (for IAP)
   courseId       String   @db.ObjectId
   course         Course   @relation(fields: [courseId], references: [id])
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
 
 model Notification {
   id            String           @id @default(auto()) @map("_id") @db.ObjectId

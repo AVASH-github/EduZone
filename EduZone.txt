@@ -23,4 +23,8 @@ D:\Software\EduZone\server>npm run dev
 
 ngrok http 3000
 
+D:\Software\EduZone\admin-dashboard>npm run dev
 
+khalti app integration 
+email: nepalavash20@gmail.com
+password A@123456789
