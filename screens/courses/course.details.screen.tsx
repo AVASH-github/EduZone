@@ -48,7 +48,19 @@ export default function CourseDetailsScreen() {
     const courseContent: CourseDataType[] | any = JSON.parse(
     params?.courseContent
   );
-   
+    
+
+
+  // Check purchase flag from URL query
+  const justPurchased = params.purchased === "true";
+
+  React.useEffect(() => {
+    if (justPurchased) {
+      alert("Payment successful! Enjoy your course.");
+      // Optionally refresh user data here to update purchase status
+    }
+  }, [justPurchased]);
+
 
     
   const { name, email } = useUserData();
@@ -88,13 +100,13 @@ const handlePurchase = async () => {
       Alert.alert("Error", "User info is missing. Please login again.");
       return;
     }
-
+const baseUrl = process.env.EXPO_PUBLIC_SERVER_URI;
     const paymentRequest = {
       amount: parseInt(courseData.price) * 100,
       purchase_order_id: courseData.id,
       purchase_order_name: courseData.name,
       website_url: "https://eduzone.com",
- return_url: `https://c6fd-203-9-210-139.ngrok-free.app/khalti-verify-payment?purchase_order_id=${courseData.id}&userId=${user.id}`,
+    return_url: `${baseUrl}/khalti-verify-payment?purchase_order_id=${courseData.id}&userId=${user.id}`,
       customer_info: {
         name: user.name,
         email: user.email,

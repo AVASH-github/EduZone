@@ -1,10 +1,10 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import CourseAccessScreen from "@/screens/courses/course.access.screen";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function index() {
   return (
-    <View>
-      <Text>index</Text>
-    </View>
-  )
+    <GestureHandlerRootView>
+      <CourseAccessScreen />
+    </GestureHandlerRootView>
+  );
 }

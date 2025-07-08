@@ -226,3 +226,137 @@ app.get("/khalti-verify-payment", async (req, res) => {
 });
 
 
+
+// fetch questions
+app.get(
+  "/get-questions/:contentId",
+  isAuthenticated,
+  async (req, res, next) => {
+    try {
+      const contentId = req.params.contentId;
+      const questions = await prisma.courseQuestions.findMany({
+        where: {
+          contentId,
+        },
+        include: {
+          user: true,
+          answers: {
+            include: {
+              user: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+      res.status(201).json({
+        success: true,
+        questions,
+      });
+    } catch (error) {
+      res.status(501).json({ success: false, message: error.message });
+    }
+  }
+);
+
+
+// adding reply to question
+app.put("/adding-reply", isAuthenticated, async (req, res) => {
+  try {
+    await prisma.courseQuestionAnswers.create({
+      data: {
+        questionId: req.body.questionId,
+        answer: req.body.answer,
+        userId: req.user.id,
+      },
+    });
+
+    const q = await prisma.courseQuestions.findUnique({
+      where: {
+        id: req.body.questionId,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    if (q?.user.id !== req.user.id) {
+      function truncateString(str, num) {
+        if (str.length > num) {
+          let end = str.substring(0, num).lastIndexOf(" ");
+          return str.substring(0, end) + "...";
+        }
+        return str;
+      }
+
+      await prisma.notification.create({
+        data: {
+          title: `New Answer Received`,
+          message: `You have a new answer in your question - ${truncateString(
+            q.question,
+            10
+          )}`,
+          creatorId: req.user?.id,
+          receiverId: q.user.id,
+          redirect_link: `https://www.becodemy.com/course-access/${
+            req.body.courseSlug
+          }?lesson=${req.body.activeVideo + 1}`,
+          questionId: req.body.questionId,
+        },
+      });
+
+      if (q.user.pushToken) {
+        const courseData = await prisma.course.findUnique({
+          where: {
+            slug: req.body.courseSlug,
+          },
+        });
+        const pushData = {
+          to: q.user.pushToken,
+          sound: "default",
+          title: `New Answer Received`,
+          body: `You have a new answer in your question - ${truncateString(
+            q.question,
+            10
+          )}`,
+          data: {
+            ...courseData,
+            activeVideo: req.body.activeVideo,
+          },
+        };
+
+        await fetch("https://exp.host/--/api/v2/push/send", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Accept-encoding": "gzip, deflate",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(pushData),
+        });
+      }
+    }
+
+    const question = await prisma.courseQuestions.findMany({
+      where: {
+        contentId: req.body.contentId,
+      },
+      include: {
+        user: true,
+        answers: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    res.status(201).json({
+      success: true,
+      question,
+    });
+  } catch (error) {
+    res.status(501).json({ success: false, message: error.message });
+  }
+});
