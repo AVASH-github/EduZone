@@ -10,7 +10,8 @@ import {
 import { Stack } from "expo-router";
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-
+import { NotificationProvider } from "@/context/notification.provider";
+import * as Notifications from 'expo-notifications';
 const _layout = () => {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -25,15 +26,28 @@ const _layout = () => {
     return null;
   }
 
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
+
   return (
      <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider>
+           <NotificationProvider>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
           <Stack.Screen name="(routes)/onboarding/index" />
-          
+         <Stack.Screen name="(routes)/course-access" />
+          <Stack.Screen name="(routes)/notification/index" />
         </Stack>
-
+</NotificationProvider>
     </ThemeProvider>
     </GestureHandlerRootView>
     

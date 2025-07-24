@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "44505882742",
+    "project_id": "eduzone-882cb",
+    "storage_bucket": "eduzone-882cb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:44505882742:android:3f4c7bd437893d456aff57",
+        "android_client_info": {
+          "package_name": "com.avash1017.EduZone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYStP6k9C5AQTklG3S_oMaPWQSpcEoYIU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

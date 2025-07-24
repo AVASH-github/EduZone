@@ -8,8 +8,8 @@ export default function GradientText({ text }: { text: string }) {
       <Svg height="100%" width="100%">
         <Defs>
           <LinearGradient id="grad" x1="0" y1="0" x2="100%" y2="0">
-            <Stop offset="0" stopColor="#6D55FE" />
-            <Stop offset="1" stopColor="#FFFFFF" />
+            <Stop offset="0" stopColor="#1528c6" />
+            <Stop offset="1" stopColor="#26d4ea" />
           </LinearGradient>
         </Defs>
         <SvgText

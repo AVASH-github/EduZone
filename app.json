@@ -17,7 +17,9 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.avash1017.EduZone"
+      "package": "com.avash1017.EduZone",
+      "googleServicesFile" : "./android/app/google-services.json"
+
     },
     "web": {
       "bundler": "metro",
@@ -30,9 +32,8 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#4842eb"
         }
       ],
       "expo-secure-store"

@@ -38,12 +38,12 @@ export default function SupportCenterScreen() {
     const isHasOpenTikcet = user?.Tickets.find(
       (i: TicketsTypes) => i.status !== "Closed"
     );
-    // if (isHasOpenTikcet) {
-    //   router.push({
-    //     pathname: "/(routes)/support-chat",
-    //     params: { ticket: JSON.stringify(isHasOpenTikcet) },
-    //   });
-    // }
+    if (isHasOpenTikcet) {
+      router.push({
+        pathname: "/(routes)/support-chat",
+        params: { ticket: JSON.stringify(isHasOpenTikcet) },
+      });
+    }
   };
 
   const ticketCreateHandler = async () => {
@@ -60,10 +60,10 @@ export default function SupportCenterScreen() {
           setTicketDescription("");
           setOpen(false);
           refetch();
-        //   router.push({
-        //     pathname: "/(routes)/support-chat",
-        //     params: { ticket: JSON.stringify(res.data.ticket) },
-        //   });
+          router.push({
+            pathname: "/(routes)/support-chat",
+            params: { ticket: JSON.stringify(res.data.ticket) },
+          });
         });
     }
   };
@@ -144,7 +144,7 @@ export default function SupportCenterScreen() {
             flexDirection: "row",
             gap: scale(10),
           }}
-          onPress={() => supportChatHanlder()}
+          onPress={() => router.push("/(routes)/support-chat")}
         >
           <IconOne />
           <View>
@@ -230,7 +230,7 @@ export default function SupportCenterScreen() {
             flexDirection: "row",
             gap: scale(10),
           }}
-          onPress={() => Linking.openURL("mailto:avashnepal123@gmail.com")}
+          onPress={() => Linking.openURL("mailto:support@becodemy.com")}
         >
           <IconThree />
           <View>

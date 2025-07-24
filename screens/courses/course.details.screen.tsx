@@ -499,7 +499,7 @@ const baseUrl = process.env.EXPO_PUBLIC_SERVER_URI;
               }}
             >
               Buy now{" "}
-              {courseData?.price === "0" ? "(free)" : `$${courseData?.price}`}
+              {courseData?.price === "0" ? "(free)" : `Rs ${courseData?.price}`}
             </Text>
           </TouchableOpacity>
         )}

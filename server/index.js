@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import { isAuthenticated } from "./middleware/auth.js";
 import prisma from "./utils/prisma.js";
 import { sendToken } from "./utils/sendToken.js";
+import nodemailer from "nodemailer";
+import sendEmail from "./utils/sendEmail.js";
 
 dotenv.config();
 console.log("JWT_SECRET_KEY from env:", process.env.JWT_SECRET_KEY);
@@ -142,32 +144,23 @@ app.listen(PORT, () => {
 
 
 
-///testing khalti integration 
-
-// Create order after verifying Khalti payment
+//testing khalti integration 
 app.get("/khalti-verify-payment", async (req, res) => {
   console.log("📥 Incoming query params:", req.query);
 
   const { pidx, userId } = req.query;
   let { purchase_order_id } = req.query;
 
-  // 🛠️ Fix if it's an array (Khalti often sends it twice)
   if (Array.isArray(purchase_order_id)) {
     purchase_order_id = purchase_order_id[0];
   }
 
-  // ❗Check presence of essential data
   if (!pidx || !userId || !purchase_order_id) {
     return res.status(400).json({
       success: false,
       message: "Missing pidx, userId, or purchase_order_id",
     });
   }
-
-  console.log("🧾 Parsed values →");
-  console.log("pidx:", pidx);
-  console.log("purchase_order_id:", purchase_order_id);
-  console.log("userId:", userId);
 
   try {
     const response = await fetch("https://a.khalti.com/api/v2/epayment/lookup/", {
@@ -182,17 +175,14 @@ app.get("/khalti-verify-payment", async (req, res) => {
     const data = await response.json();
     console.log("✅ Khalti verify response:", data);
 
-    // ✅ Check status
     if (data.status !== "Completed") {
       return res.json({ success: false, message: "Payment not completed" });
     }
 
-    // ✅ Extra check in case Khalti didn’t return order info
     if (!data.transaction_id) {
       return res.json({ success: false, message: "Missing transaction ID from Khalti" });
     }
 
-    // ✅ Check for existing order
     const existingOrder = await prisma.orders.findFirst({
       where: { transaction_id: data.transaction_id },
     });
@@ -201,7 +191,6 @@ app.get("/khalti-verify-payment", async (req, res) => {
       return res.json({ success: true, message: "Already purchased" });
     }
 
-    // ✅ Create order in DB
     const order = await prisma.orders.create({
       data: {
         userId: String(userId),
@@ -211,6 +200,28 @@ app.get("/khalti-verify-payment", async (req, res) => {
         product_id: data.purchase_order_name || "N/A",
       },
     });
+
+    const user = await prisma.user.findUnique({
+      where: { id: String(userId) },
+    });
+
+    if (!user) {
+      console.log("❌ User not found for email");
+    } else {
+      const subject = "🎉 Payment Successful - Course Purchase Confirmation";
+      const htmlContent = `
+        <h2>Payment Confirmation</h2>
+        <p>Hi <b>${user.name}</b>,</p>
+        <p>Your payment for course ID <strong>${purchase_order_id}</strong> has been successfully processed via <strong>Khalti</strong>.</p>
+        <p><b>Transaction ID:</b> ${data.transaction_id}</p>
+        <p>Thank you for purchasing!</p>
+        <p>- EduZone Team</p>
+      `;
+
+      // Use your sendEmail helper here
+      await sendEmail(user.email, subject, htmlContent);
+      console.log("📧 Confirmation email sent to", user.email);
+    }
 
     return res.json({
       success: true,
@@ -224,6 +235,8 @@ app.get("/khalti-verify-payment", async (req, res) => {
     return res.json({ success: false, message: "Verification failed" });
   }
 });
+
+
 
 
 
@@ -360,3 +373,179 @@ app.put("/adding-reply", isAuthenticated, async (req, res) => {
     res.status(501).json({ success: false, message: error.message });
   }
 });
+// updating push token
+app.put("/update-push-token", isAuthenticated, async (req, res) => {
+  try {
+    const user = await prisma.user.update({
+      where: {
+        id: req.user.id,
+      },
+      data: {
+        pushToken: req.body.pushToken,
+      },
+    });
+    res.status(201).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(501).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+
+// get notifications
+app.get("/get-notifications", isAuthenticated, async (req, res, next) => {
+  try {
+    const notifications = await prisma.notification.findMany({
+      where: {
+        OR: [{ receiverId: req.user?.id }, { receiverId: "All" }],
+      },
+      include: {
+        user: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.status(201).json({
+      success: true,
+      notifications,
+    });
+  } catch (error) {
+    res.status(501).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+
+// delete notification
+app.delete(
+  "/delete-notification/:id",
+  isAuthenticated,
+  async (req, res, next) => {
+    try {
+      await prisma.notification.delete({
+        where: {
+          id: req.params.id,
+        },
+      });
+
+      const notifications = await prisma.notification.findMany({
+        where: {
+          OR: [{ receiverId: req.user?.id }, { receiverId: "All" }],
+        },
+        include: {
+          user: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+      res.status(201).json({
+        success: true,
+        notifications,
+      });
+    } catch (error) {
+      res.status(501).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+);
+
+
+// create ticket
+app.post("/create-ticket", isAuthenticated, async (req, res) => {
+  try {
+    const { ticketTitle, details } = req.body;
+
+    const ticket = await prisma.tickets.create({
+      data: {
+        ticketTitle,
+        details,
+        creatorId: req.user.id,
+      },
+    });
+    res.status(201).json({
+      success: true,
+      ticket,
+    });
+  } catch (error) {
+    res.status(501).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+
+// get ticket replies
+app.get("/get-ticket/:id", isAuthenticated, async (req, res) => {
+  try {
+    const ticket = await prisma.ticketReply.findMany({
+      where: {
+        ticketId: req.params.id,
+      },
+      include: {
+        user: true,
+      },
+    });
+    res.status(201).json({
+      success: true,
+      ticket,
+    });
+  } catch (error) {
+    res.status(501).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+// adding new reply
+app.put("/ticket-reply", isAuthenticated, async (req, res) => {
+  try {
+    const { ticketId, ticketReply } = req.body;
+
+    const reply = await prisma.ticketReply.create({
+      data: {
+        ticketId: ticketId,
+        reply: ticketReply,
+        replyId: req.user.id,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    await prisma.tickets.update({
+      where: {
+        id: ticketId,
+      },
+      data: {
+        status: req.user.role === "Admin" ? "Answered" : "Pending",
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      reply,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to add reply",
+    });
+  }
+});
+
+

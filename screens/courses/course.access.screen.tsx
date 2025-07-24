@@ -7,7 +7,7 @@ import {
   Linking,
   TextInput,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTheme } from "@/context/theme.context";
 import { useGlobalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -33,6 +33,7 @@ import QuestionCard from "@/components/cards/question.card";
 import ReviewCard from "@/components/cards/review.card";
 import BottomCourseAccess from "@/components/course/bottom.course.access";
 import { WebView } from "react-native-webview";
+import YoutubeIframe from "react-native-youtube-iframe";
 
 export default function CourseAccessScreen() {
   const { theme } = useTheme();
@@ -135,7 +136,8 @@ export default function CourseAccessScreen() {
       console.log(error);
     }
   };
-
+  const [playing, setPlaying] = useState(false);
+   
   return (
     <View style={{ flex: 1, backgroundColor: theme.dark ? "#111" : "#fff" }}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -143,23 +145,26 @@ export default function CourseAccessScreen() {
           {/* Video Player */}
           <View
             style={{
-              flex: 1,
+               flex: 1,   
               marginVertical: 10,
               backgroundColor: "#000",
               alignItems: "center",
+                
             }}
           >
-            <WebView
+ 
+  <WebView
               source={{
-                uri: `https://www.youtube.com/embed/${courseContents[activeVideo].videoUrl}`,
+                 uri: `https://youtu.be/${courseContents[activeVideo].videoUrl}`
               }}
               style={{
-                flex: 1,
-                width: windowWidth(450),
-                height: windowHeight(160),
+                width: windowWidth(480),
+                height: windowHeight(200),
+                paddingVertical:  moderateScale(30),
               }}
               javaScriptEnabled={true}
               domStorageEnabled={true}
+              allowsFullscreenVideo={true}
             />
           </View>
 
@@ -179,7 +184,6 @@ export default function CourseAccessScreen() {
                 left: scale(5),
                 zIndex: 1,
               }}
-
             >
               <TouchableOpacity onPress={() => handlePrevLesson()}>
                 <AntDesign name="left" size={scale(20)} color={"#fff"} />

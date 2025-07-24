@@ -1,18 +1,25 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { Image, Pressable, StyleSheet, Text, View,ScrollView, TouchableOpacity} from "react-native";
+
 import Swiper from "react-native-swiper";
 import * as WebBrowser from "expo-web-browser";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { IsIPAD } from "@/themes/app.constant";
 import { bannerData } from "@/configs/constants";
+import React, { useState } from 'react'
+import { useTheme } from "@/context/theme.context";
+import { fontSizes } from '@/themes/app.constant';
 
 export default function HomeBanner() {
   const handlePress = async (item: string) => {
     await WebBrowser.openBrowserAsync(item);
   };
 
+
+
+
   return (
     <View style={styles.container}>
+      
       <Swiper
         dotStyle={styles.dot}
         activeDotStyle={styles.activeDot}
@@ -44,7 +51,6 @@ export default function HomeBanner() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: verticalScale(10),
     paddingHorizontal: verticalScale(7),
   },
   dot: {

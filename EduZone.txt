@@ -28,3 +28,30 @@ D:\Software\EduZone\admin-dashboard>npm run dev
 khalti app integration 
 email: nepalavash20@gmail.com
 password A@123456789
+
+
+Push Notifications (FCM V1): Google Service Account Key For FCM V1
+Project ID      eduzone-882cb
+Client Email    firebase-adminsdk-fbsvc@eduzone-882cb.iam.gserviceaccount.com
+Client ID       108406219000045737261
+Private Key ID  89e592a184b3d0ae05650eeea548d9205a1f06a8
+Updated         26 minutes ago
+
+Submissions: Google Service Account Key for Play Store Submissions
+  None assigned yet
+
+Configuration: Build Credentials etq-2t2Imo (Default)
+Keystore
+Type                JKS
+Key Alias           edf245b11cef5e2d87bcd303f8026562
+MD5 Fingerprint     27:97:61:86:99:2A:34:73:F8:46:98:23:45:2D:35:F7
+SHA1 Fingerprint    3F:D1:F8:8F:6E:86:66:98:CE:AC:F8:A0:82:A8:47:42:7E:90:6D:B8
+SHA256 Fingerprint  31:44:54:1B:60:CE:74:51:A2:60:3F:38:26:AF:AF:2C:D3:FE:81:A7:18:25:4B:C8:2B:16:90:9E:4A:2F:A3:8E
+Updated             1 day ago
+
+3F:D1:F8:8F:6E:86:66:98:CE:AC:F8:A0:82:A8:47:42:7E:90:6D:B8
+
+
+
+app password for EduZone 
+ekcc kqxs bkqg ygjt

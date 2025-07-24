@@ -4,6 +4,8 @@ import {
   StyleSheet,
   Text,
   TextInput,
+    ScrollView,
+    TouchableOpacity,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -28,7 +30,7 @@ export default function WelcomeHeader() {
   const { theme } = useTheme();
   const { name } = useUserData();
   const [notificationLength, setnotificationLength] = useState(0);
-
+ 
   useEffect(() => {
     const subscription = async () => {
       await setAuthorizationHeader();
@@ -87,7 +89,9 @@ export default function WelcomeHeader() {
           </Text>
         </View>
         <View style={{ flexDirection: "row" }}>
-          <Pressable >
+          <Pressable
+            onPress = {() => router.push('/(routes)/notification')}
+          >
             <View
               style={[
                 styles.notificationWrapper,
@@ -148,6 +152,7 @@ export default function WelcomeHeader() {
             color={theme.dark ? "#fff" : "blue"}
           />
         </Pressable>
+         
       </View>
     </LinearGradient>
   );
